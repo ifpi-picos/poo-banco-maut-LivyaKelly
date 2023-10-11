@@ -4,19 +4,28 @@ import java.time.LocalDate;
 public class Conta {
     private int numberAgency;
     private int numeroConta = 1;
-    private double saldo = 0.0;
+    private String number;
+    private double saldo;
     private Client client;
     List<Transacao> transacoes;
 
-    public Conta(int numberAgency, Client client, double saldo) {
+    public Conta(int numberAgency, Client client) {
         this.numberAgency = numberAgency;
-        this.numeroConta += 1;
-        this.saldo = saldo;
+        this.number = visualizarNumero();
+        this.saldo = 0.0;
         this.client = client;
+    }
+
+    public String visualizarNumero(){
+        return String.format("%04d", numeroConta++);
     }
 
     public int getNumberAgency() {
         return numberAgency;
+    }
+
+    public String getNumber(){
+        return number;
     }
 
     public double getSaldo() {
