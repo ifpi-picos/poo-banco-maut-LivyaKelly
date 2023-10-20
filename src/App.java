@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
+//Definição da classe app e formaçaõ de listas vazias para armazenar algumas informações do cliente
 public class App {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -10,6 +11,7 @@ public class App {
         List<Client> clientes = new ArrayList<>();
         List<Conta> contas = new ArrayList<>();
 
+        // Usado para criar uma interface de menu interativa que possibilita ao usuário realizar diversas ações ou encerrar o programa
         while(true) {
             System.out.println("1 - Cadastro de Cliente");
             System.out.println("2 - Criar conta");
@@ -17,6 +19,7 @@ public class App {
             System.out.print("Digite a opção escolhida: ");
 
             int opcao = scanner.nextInt();
+            scanner.nextLine();
 
             if (opcao == 1) {
                 cadastroCliente(enderecos, clientes, scanner);
