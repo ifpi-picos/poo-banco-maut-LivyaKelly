@@ -51,6 +51,7 @@ public class Client {
         return endereco;
     }
 
+    // Usado para obter uma lista de objetos do tipo "Conta"
     public List<Conta> getConta() {
         return conta;
     }
