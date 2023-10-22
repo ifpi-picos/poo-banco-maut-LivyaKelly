@@ -1,10 +1,10 @@
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.time.LocalDate;
 
 public class Conta {
     private int numberAgency;
-    private int numeroConta = 1;
+    private static int numeroConta = 1;
     private int number;
     private double saldo;
     private Client client;
@@ -16,6 +16,7 @@ public class Conta {
         this.number = numeroConta++;
         this.saldo = 0.0;
         this.client = client;
+        this.transacoes = new ArrayList<>();
     }
 
     // Getter para obter o número da agência
@@ -47,7 +48,7 @@ public class Conta {
     public int getNumeroConta() {
         return numeroConta;
     }
-    
+
     // Método para depositar um valor na conta
     public void depositar(double valor) {
         this.saldo += valor;
@@ -78,5 +79,3 @@ public class Conta {
         this.transacoes.add(t); // Adiciona a transação à lista de transações da conta
     }
 }
-
-// 

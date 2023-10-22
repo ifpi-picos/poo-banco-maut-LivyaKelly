@@ -9,7 +9,7 @@ public class Client {
     private LocalDate dn;
     private Endereco endereco;
 
-    private List<Conta> conta;
+    private List<Conta> contas;
 
     // Construtor da classe cliente
     public Client(String nome, String cpf, LocalDate dn, Endereco endereco) {
@@ -17,7 +17,7 @@ public class Client {
         this.cpf = cpf;
         this.dn = dn;
         this.endereco = endereco;
-        this.conta = new ArrayList<Conta>(); 
+        this.contas = new ArrayList<Conta>(); 
     }
 
     // Retorna o valor atual do nome do cliente
@@ -53,6 +53,10 @@ public class Client {
 
     // Usado para obter uma lista de objetos do tipo "Conta"
     public List<Conta> getConta() {
-        return conta;
+        return contas;
+    }
+
+    public void adicionarConta(Conta conta){
+        contas.add(conta);
     }
 }
