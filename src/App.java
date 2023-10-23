@@ -1,5 +1,8 @@
 import java.time.LocalDate;
 import java.util.Scanner;
+import br.edu.ifpi.poo.cliente.Client;
+import br.edu.ifpi.poo.conta.Conta;
+import br.edu.ifpi.poo.endereco.Endereco;
 import java.util.ArrayList;
 import java.util.List;
 

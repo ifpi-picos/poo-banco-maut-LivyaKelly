@@ -1,5 +1,9 @@
+package br.edu.ifpi.poo.cliente;
+
 import java.time.LocalDate;
 import java.util.List;
+import br.edu.ifpi.poo.conta.Conta;
+import br.edu.ifpi.poo.endereco.Endereco;
 import java.util.ArrayList;
 
 // Exibição dos atributos da classe Cliente

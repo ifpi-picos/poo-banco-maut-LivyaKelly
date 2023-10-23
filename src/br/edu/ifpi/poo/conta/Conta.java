@@ -1,8 +1,13 @@
+package br.edu.ifpi.poo.conta;
+import br.edu.ifpi.poo.transacao.Transacao;
 import java.util.ArrayList;
 import java.util.List;
+
+import br.edu.ifpi.poo.cliente.Client;
+
 import java.time.LocalDate;
 
-public class Conta {
+public abstract class Conta {
     private int numberAgency;
     private static int numeroConta = 1;
     private int number;

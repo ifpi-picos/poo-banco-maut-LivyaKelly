@@ -1,3 +1,4 @@
+package br.edu.ifpi.poo.transacao;
 import java.time.LocalDate;
 
 public class Transacao {
