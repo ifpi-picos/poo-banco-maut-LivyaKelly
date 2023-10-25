@@ -7,7 +7,7 @@ import br.edu.ifpi.poo.cliente.Client;
 import br.edu.ifpi.poo.notificacao.Notificacao;
 import br.edu.ifpi.poo.transacao.Transacao;
 
-public abstract class Conta {
+public class Conta {
     private int numberAgency;
     private static int numeroConta = 1;
     private int number;
@@ -23,6 +23,7 @@ public abstract class Conta {
         this.saldo = 0.0;
         this.client = client;
         this.transacoes = new ArrayList<>();
+        this.notificacao = notificacao;
     }
 
     // Getter para obter o número da agência
@@ -55,6 +56,7 @@ public abstract class Conta {
         return numeroConta;
     }
 
+    
     public Notificacao getNotificacao() {
         return notificacao;
     }

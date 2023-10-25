@@ -1,6 +1,7 @@
 package br.edu.ifpi.poo.conta;
 import br.edu.ifpi.poo.cliente.Client;
 import br.edu.ifpi.poo.notificacao.Notificacao;
+import br.edu.ifpi.poo.transacao.Transacao;
 
 public class ContaCorrente extends Conta{
     private int transferenciasGratis;
@@ -14,28 +15,26 @@ public class ContaCorrente extends Conta{
     }
 
     @Override
-    public void transferir(Conta destino, double valor, String tipo){
-        if (transferenciasGratis > 0){
-            if (this.saldo >= valor) {
-                this.sacar(valor);
-                destino.depositar(valor);
-                addTransacao(valor * -1, "transferência para " + destino.getNumber());
-                transferenciasGratis--;
-                notificacao.enviarNotificacao("Transferência realizada no valor de " + valor);
-            } else {
-                notificacao.enviarNotificacao("Saldo insuficiente para transferência de " + valor);
-            }
+    public void transferir(Conta destino, double valor, String tipo) {
+        if (this.saldo + chequeEspecial >= valor) {
+            if (this.transferenciasGratis < 2) {
+                if (this.saldo >= valor) {
+                    this.sacar(valor);
+                    destino.depositar(valor);
+                    addTransacao(valor * -1, "transferência para " + destino.getNumber());
+                    transferenciasGratis++;
+                    notificacao.enviarNotificacao("Transferência realizada no valor de " + valor);
+                } else {
+                    double valorComTaxa = valor + (valor * 0.10); // Valor com taxa de 10%
+                    this.sacar(valorComTaxa);
+                    destino.depositar(valor);
+                    addTransacao(valorComTaxa * -1, "transferência para " + destino.getNumber());
+                    notificacao.enviarNotificacao("Transferência realizada no valor de " + valor + " com taxa de " + (valor * 0.10));
+                }
+            } 
+
         } else {
-            double taxa = valor * 0.10; // 10% de taxa
-            if (this.saldo >= valor + taxa) {
-                this.sacar(valor + taxa);
-                destino.depositar(valor);
-                addTransacao((valor + taxa) * -1, "transferência para " + destino.getNumber());
-                notificacao.enviarNotificacao("Transferência realizada no valor de " + valor + " com taxa de " + taxa);
-            } else {
-                notificacao.enviarNotificacao("Saldo insuficiente para transferência de " + valor + " com taxa de " + taxa);
-            }
-        } 
+            notificacao.enviarNotificacao("Limite de transferências gratuitas excedido.");
         }
     }
-    
+}

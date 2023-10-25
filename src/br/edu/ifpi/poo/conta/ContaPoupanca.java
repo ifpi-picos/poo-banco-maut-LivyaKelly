@@ -39,7 +39,7 @@ public class ContaPoupanca extends Conta{
 
     @Override
     public void depositar(double valor) {
-        double rendimentoGanho = valor * (rendimento / 100); // Calcular o rendimento
+        double rendimentoGanho = valor * rendimento; // Calcular o rendimento
         super.depositar(valor + rendimentoGanho); // Adicionar o rendimento ao saldo
         notificacao.enviarNotificacao("Depósito realizado no valor de " + valor + " com rendimento de " + rendimentoGanho);
     }
