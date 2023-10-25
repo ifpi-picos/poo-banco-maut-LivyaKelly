@@ -1,73 +1,41 @@
 package br.edu.ifpi.poo.conta;
 import br.edu.ifpi.poo.cliente.Client;
-import br.edu.ifpi.poo.notificacoes.Notificacoes;
-import br.edu.ifpi.poo.transacao.Transacao;
+import br.edu.ifpi.poo.notificacao.Notificacao;
 
 public class ContaCorrente extends Conta{
-    private Client cliente;
-    private double taxa = 0.1;
-    private double saldo;
-    private Transacao transacao;
-    private Notificacoes notificacoes;
+    private int transferenciasGratis;
+    private double chequeEspecial;
    
-   
-    public ContaCorrente(int numberAgency, Client client, Client cliente, double taxa, double saldo,
-            Transacao transacao, Notificacoes notificacoes) {
-        super(numberAgency, client);
-        this.taxa = taxa;
-        this.saldo = saldo;
-        this.transacao = transacao;
-        this.notificacoes = notificacoes;
+    // Construtor da classe
+    public ContaCorrente(int numberAgency, int numeroConta, int number, double saldo, Client client, Notificacao notificacao) {
+        super(numberAgency, number, saldo, client, notificacao);
+        this.transferenciasGratis = 2;
+        this.chequeEspecial = 1.000;
     }
 
-
-    public Client getCliente() {
-        return cliente;
+    @Override
+    public void transferir(Conta destino, double valor, String tipo){
+        if (transferenciasGratis > 0){
+            if (this.saldo >= valor) {
+                this.sacar(valor);
+                destino.depositar(valor);
+                addTransacao(valor * -1, "transferência para " + destino.getNumber());
+                transferenciasGratis--;
+                notificacao.enviarNotificacao("Transferência realizada no valor de " + valor);
+            } else {
+                notificacao.enviarNotificacao("Saldo insuficiente para transferência de " + valor);
+            }
+        } else {
+            double taxa = valor * 0.10; // 10% de taxa
+            if (this.saldo >= valor + taxa) {
+                this.sacar(valor + taxa);
+                destino.depositar(valor);
+                addTransacao((valor + taxa) * -1, "transferência para " + destino.getNumber());
+                notificacao.enviarNotificacao("Transferência realizada no valor de " + valor + " com taxa de " + taxa);
+            } else {
+                notificacao.enviarNotificacao("Saldo insuficiente para transferência de " + valor + " com taxa de " + taxa);
+            }
+        } 
+        }
     }
-
-
-    public void setCliente(Client cliente) {
-        this.cliente = cliente;
-    }
-
-
-    public double getTaxa() {
-        return taxa;
-    }
-
-
-    public void setTaxa(double taxa) {
-        this.taxa = taxa;
-    }
-
-
-    public double getSaldo() {
-        return saldo;
-    }
-
-
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
-    }
-
-
-    public Transacao getTransacao() {
-        return transacao;
-    }
-
-
-    public void setTransacao(Transacao transacao) {
-        this.transacao = transacao;
-    }
-
-
-    public Notificacoes getNotificacoes() {
-        return notificacoes;
-    }
-
-
-    public void setNotificacoes(Notificacoes notificacoes) {
-        this.notificacoes = notificacoes;
-    }
-
-}
+    

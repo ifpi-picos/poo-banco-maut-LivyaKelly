@@ -2,12 +2,18 @@ import java.time.LocalDate;
 import java.util.Scanner;
 import br.edu.ifpi.poo.cliente.Client;
 import br.edu.ifpi.poo.conta.Conta;
+import br.edu.ifpi.poo.conta.ContaCorrente;
+import br.edu.ifpi.poo.conta.ContaPoupanca;
 import br.edu.ifpi.poo.endereco.Endereco;
+import br.edu.ifpi.poo.notificacao.NotificacaoSmS;
+
 import java.util.ArrayList;
 import java.util.List;
 
 //Definição da classe app e formação de listas vazias para armazenar algumas informações do cliente
 public class App {
+    private static Client cliente;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         List<Endereco> enderecos = new ArrayList<>();
@@ -24,7 +30,7 @@ public class App {
             System.out.println("6 - Ver extrato");
             System.out.println("7 - Ver dados de cliente");
             System.out.println("0 - Sair\n");
-            System.out.print("Digite a opção escolhida: ");
+            System.out.print("\nDigite a opção escolhida: ");
         
             int opcao = scanner.nextInt();
             scanner.nextLine(); // Limpa o buffer
@@ -71,6 +77,7 @@ public class App {
         
         Endereco endereco = new Endereco(rua, bairro, cep, numero);
         enderecos.add(endereco);
+
         Client cliente = new Client(nome, cpf, dataNascimento, endereco);
         clientes.add(cliente);
     }
@@ -78,6 +85,67 @@ public class App {
     public static void novaConta(Scanner scanner, List<Conta> contas, List<Client> clients) {
         System.out.print("Digite o CPF do cliente: ");
         String cpf = scanner.nextLine();
+        System.out.println(" Qual conta você deseja criar?");
+        System.out.println("1 - Conta Corrente");
+        System.out.println("2 - Conta Poupança");
+        
+        int escolha = scanner.nextInt(); // Lê a escolha do usuário
+
+        
+    
+        if (escolha == 1) {
+
+            System.out.print("Digite o número da agência: ");
+            int numberAgency = scanner.nextInt();
+            ContaCorrente contaCorrente = new ContaCorrente(numberAgency, 0, 0, 250, cliente, new NotificacaoSmS());
+            contas.add(contaCorrente);
+
+            cliente.adicionarConta(contaCorrente);
+    
+            System.out.println("\nConta criada com sucesso. Saldo inicial: " + contaCorrente.getSaldo() + " reais." + "\n" + "Número da conta: " + contaCorrente.getNumber() + "\n" + "Número da agência: " + contaCorrente.getNumberAgency());
+          
+        } else if (escolha == 2) {
+            System.out.print("Digite o número da agência: ");
+            int numberAgency = scanner.nextInt();
+            ContaPoupanca contaPoupanca = new ContaPoupanca(numberAgency, 0, 0, 250, cliente, new NotificacaoSmS());
+            contas.add(contaPoupanca);
+
+            cliente.adicionarConta(contaPoupanca);
+    
+            System.out.println("\nConta criada com sucesso. Saldo inicial: " + contaPoupanca.getSaldo() + " reais." + "\n" + "Número da conta: " + contaPoupanca.getNumber() + "\n" + "Número da agência: " + contaPoupanca.getNumberAgency());
+            
+        } else {
+            System.out.println("Escolha inválida. Por favor, escolha 1 para Conta Corrente ou 2 para Conta Poupança.");
+        }
+
+        /* if (escolha == 1) {
+        // Criar uma Conta Corrente
+        System.out.print("Digite o número da agência: ");
+        int numeroAgencia = scanner.nextInt();
+        System.out.print("Digite o número da conta: ");
+        int numeroConta = scanner.nextInt();
+        System.out.print("Digite o saldo inicial: ");
+        double saldo = scanner.nextDouble();
+
+        // Crie uma instância de Conta Corrente e adicione-a à lista de contas
+        ContaCorrente contaCorrente = new ContaCorrente(numeroAgencia, numeroConta, numero, saldo, cliente, notificacao);
+        contas.add(contaCorrente);
+    } else if (escolha == 2) {
+        // Criar uma Conta Poupança
+        System.out.print("Digite o número da agência: ");
+        int numeroAgencia = scanner.nextInt();
+        System.out.print("Digite o número da conta: ");
+        int numeroConta = scanner.nextInt();
+        System.out.print("Digite o saldo inicial: ");
+        double saldo = scanner.nextDouble();
+
+        // Crie uma instância de Conta Poupança e adicione-a à lista de contas
+        ContaPoupanca contaPoupanca = new ContaPoupanca(numeroAgencia, numeroConta, numero, saldo, cliente, notificacao);
+        contas.add(contaPoupanca);
+    } else {
+        System.out.println("Escolha inválida. Por favor, escolha 1 para Conta Corrente ou 2 para Conta Poupança.");
+    }*/
+
     
         Client cliente = null;
         for (Client c : clients) {
@@ -90,19 +158,19 @@ public class App {
         if (cliente != null) {
             System.out.print("Digite o número da agência: ");
             int numberAgency = scanner.nextInt();
-            Conta conta = new Conta(numberAgency, cliente);
+            Conta conta = new Conta(numberAgency, 0, 0, cliente, new NotificacaoSmS());
             contas.add(conta);
 
             cliente.adicionarConta(conta);
     
-            System.out.println("Conta criada com sucesso. Saldo inicial: " + conta.getSaldo() + " reais." + "\n" + "Número da conta: " + conta.getNumber() + "\n" + "Número da agência: " + conta.getNumberAgency());
+            System.out.println("\nConta criada com sucesso. Saldo inicial: " + conta.getSaldo() + " reais." + "\n" + "Número da conta: " + conta.getNumber() + "\n" + "Número da agência: " + conta.getNumberAgency());
         } else {
             System.out.println("Cliente com o CPF fornecido não encontrado. Não é possível criar uma conta.");
         }
     }
 
     public static void verDadosDoCliente(Scanner scanner, List<Client> clientes, List<Conta> contas) {
-        System.out.print("Digite o CPF do cliente: ");
+        System.out.print("Digite o CPF do cliente: \n");
         String cpf = scanner.nextLine();
     
         Client clienteEncontrado = null;
@@ -160,14 +228,17 @@ public class App {
         }
         
         if (contaDestino != null) {
-            System.out.print("Digite o valor a ser depositado: ");
+            System.out.print("\nDigite o valor a ser depositado: ");
             double valorDeposito = scanner.nextDouble();
             
             // Realize o depósito
             contaDestino.depositar(valorDeposito);
             
             System.out.println("Depósito de " + valorDeposito + " realizado na conta " + contaDestino.getNumber());
-            System.out.println("Novo saldo da conta: " + contaDestino.getSaldo());
+            System.out.println("Enviando notificação para o cliente... Sms enviado!");
+            System.out.println("Enviando notificação para o cliente... Email enviado!");
+            System.out.println("\nNovo saldo da conta: " + contaDestino.getSaldo());
+        
         } else {
             System.out.println("Conta de destino não encontrada.");
         }
@@ -200,9 +271,11 @@ public class App {
         }
     
         if (contaOrigem != null) {
-            if (contaOrigem.saque(valorSaque)) {
-                System.out.println("Saque de " + valorSaque + " reais realizado com sucesso na conta número " + numeroContaOrigem);
-                System.out.println("Saldo atual da conta: " + contaOrigem.getSaldo() + " reais.");
+            if (contaOrigem.sacar(valorSaque)) {
+                System.out.println("\nSaque de " + valorSaque + " reais realizado com sucesso na conta número " + numeroContaOrigem);
+                System.out.println("Enviando notificação para o cliente... Sms enviado!");
+                System.out.println("Enviando notificação para o cliente... Email enviado!");
+                System.out.println("\nSaldo atual da conta: " + contaOrigem.getSaldo() + " reais.");
             } else {
                 System.out.println("Saldo insuficiente para o saque na conta número " + numeroContaOrigem);
             }
@@ -261,9 +334,11 @@ public class App {
         double valorTransferencia = scanner.nextDouble();
         scanner.nextLine(); // Limpa o buffer
     
-        if (contaOrigem.saque(valorTransferencia)) {
+        if (contaOrigem.sacar(valorTransferencia)) {
             contaDestino.depositar(valorTransferencia);
-            System.out.println("Transferência realizada com sucesso.");
+            System.out.println("\nTransferência realizada com sucesso.");
+            System.out.println("Enviando notificação para o cliente... Sms enviado!");
+            System.out.println("Enviando notificação para o cliente... Email enviado!");
         } else {
             System.out.println("Saldo insuficiente na conta de origem para a transferência.");
         }
@@ -288,9 +363,4 @@ public class App {
             System.out.println("Conta com número " + numeroConta + " não encontrada.");
         }
     }
-    
-
-
-    
-    
 }

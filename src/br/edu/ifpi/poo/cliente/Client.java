@@ -1,10 +1,10 @@
 package br.edu.ifpi.poo.cliente;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
+
 import br.edu.ifpi.poo.conta.Conta;
 import br.edu.ifpi.poo.endereco.Endereco;
-import java.util.ArrayList;
 
 // Exibição dos atributos da classe Cliente
 public class Client {
@@ -60,7 +60,29 @@ public class Client {
         return contas;
     }
 
+    // Método para adicionar uma conta à lista de contas do cliente
     public void adicionarConta(Conta conta){
         contas.add(conta);
+    }
+
+    // Método para exibir os dados do cliente
+    public void exibirDados() {
+        System.out.println("Nome: " + this.nome);
+        System.out.println("CPF: " + this.cpf);
+        System.out.println("Data de nascimento: " + this.dn);
+        System.out.println("Endereço: " + this.endereco.getRua() + ", " + this.endereco.getNumero() + ", " + this.endereco.getBairro() + ", " + this.endereco.getCep());
+    }
+
+    // Método para exibir as contas do cliente
+
+    public void exibirContas() {
+        System.out.println("Contas do cliente: ");
+        this.contas.forEach(c -> System.out.println(c.getNumberAgency() + " - " + c.getNumber()));
+    }
+
+    // Método para exibir o extrato de todas as contas do cliente
+    public void extrato() {
+        System.out.println("Extrato do cliente: ");
+        this.contas.forEach(c -> c.extrato());
     }
 }

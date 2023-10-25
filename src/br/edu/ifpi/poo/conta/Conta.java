@@ -1,22 +1,23 @@
 package br.edu.ifpi.poo.conta;
-import br.edu.ifpi.poo.transacao.Transacao;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 import br.edu.ifpi.poo.cliente.Client;
-
-import java.time.LocalDate;
+import br.edu.ifpi.poo.notificacao.Notificacao;
+import br.edu.ifpi.poo.transacao.Transacao;
 
 public abstract class Conta {
     private int numberAgency;
     private static int numeroConta = 1;
     private int number;
-    private double saldo;
+    protected double saldo;
     private Client client;
-    List<Transacao> transacoes;
+    protected Notificacao notificacao;
+    private List<Transacao> transacoes;
 
     // Construtor da classe 
-    public Conta(int numberAgency, Client client) {
+    public Conta(int numberAgency, int number2, double saldo2, Client client, Notificacao notificacao2) {
         this.numberAgency = numberAgency;
         this.number = numeroConta++;
         this.saldo = 0.0;
@@ -54,6 +55,14 @@ public abstract class Conta {
         return numeroConta;
     }
 
+    public Notificacao getNotificacao() {
+        return notificacao;
+    }
+
+    public void setNotificacao(Notificacao notificacao) {
+        this.notificacao = notificacao;
+    }
+
     // Método para depositar um valor na conta
     public void depositar(double valor) {
         this.saldo += valor;
@@ -61,13 +70,21 @@ public abstract class Conta {
     }
 
     // Método para realizar um saque da conta
-    public boolean saque(double valor) {
+    public boolean sacar(double valor) {
         if (this.saldo >= valor) {
             this.saldo -= valor;
             addTransacao(valor * -1, "saque"); // Registra a transação de saque
             return true;
         } else {
             return false; // Retorna falso se não houver saldo suficiente
+        }
+    }
+
+    public void transferir(Conta destino, double valor, String tipo){
+        if (this.saldo >= valor){
+            this.sacar(valor);
+            destino.depositar(valor);
+            addTransacao(valor * -1, "Transferência para " + destino.getNumber());
         }
     }
 
@@ -79,7 +96,7 @@ public abstract class Conta {
     }
 
     // Método privado para adicionar uma transação à lista de transações
-    private void addTransacao(double valor, String tipo){
+    protected void addTransacao(double valor, String tipo){
         Transacao t = new Transacao(LocalDate.now(), valor, tipo); // Cria uma nova transação
         this.transacoes.add(t); // Adiciona a transação à lista de transações da conta
     }
